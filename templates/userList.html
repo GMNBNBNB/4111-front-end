@@ -22,11 +22,10 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.username }}</td>
+                <td><a href="/user/{{ user.username }}">{{ user.username }}</a></td>
                 <td>{{ user.nickname }}</td>
                 <td>{{ user.join_date }}</td>
                 <td>
-                    <a href="/edit_user/{{ user.username }}">action</a> |
                     <a href="/delete_user/{{ user.username }}" onclick="return confirm('Are you sure to delete this user?');">delete</a>
                 </td>
             </tr>

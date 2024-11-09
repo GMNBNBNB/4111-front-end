@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Detail - {{ user.username }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>User Detail: {{ user.username }}</h1>
+    <nav>
+        <a href="/">Main Page</a> |
+        <a href="/userList">User List</a>
+    </nav>
+    <h2>User Profile</h2>
+    <p><strong>User Name:</strong> {{ user.username }}</p>
+    <p><strong>Nickname:</strong> {{ user.nickname }}</p>
+    <p><strong>join_date:</strong> {{ user.join_date }}</p>
+
+
+    {% if authored_books %}
+    <h2>author information</h2>
+    <p>Author Book</p>
+    <ul>
+        {% for book in authored_books %}
+            <li>
+                <strong>{{ book.title }}</strong> (ISBN: {{ book.isbn }})<br>
+                <strong>publish_date:</strong> {{ book.publish_date }}<br>
+                <strong>book_status:</strong> {{ book.status }}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+    <h2>Reading Book</h2>
+    {% if books %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>{{ book.title }}</strong> (ISBN: {{ book.isbn }})
+                    {% if book.chapters %}
+                        <ul>
+                            {% for chapter in book.chapters %}
+                                <li>{{ chapter.chapter_id }}: {{ chapter.title }} ({{ chapter.publish_date }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No chapter detail</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>User not reading any book</p>
+    {% endif %}
+
+    <h2>Post Review</h2>
+    {% if reviews %}
+    <ul>
+        {% for review in reviews %}
+        <li>
+            <strong>book:</strong> {{ review.title }} (ISBN: {{ review.isbn }})<br>
+            <strong>rating:</strong> {{ review.rating }} / 5<br>
+            <strong>review date:</strong> {{ review.comment_date }}<br>
+            <strong>content:</strong> {{ review.content }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>User not post any review</p>
+    {% endif %}
+</body>
+</html>
