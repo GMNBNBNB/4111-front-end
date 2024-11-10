@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
 import os
-from sqlalchemy import *
-from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response, abort
+import click
+from sqlalchemy import create_engine, text
+from flask import Flask, render_template, g, redirect
 
-tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+tmpl_dir = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
 # connect to DB
@@ -11,25 +13,30 @@ DATABASEURI = "postgresql://mg4774:177624@104.196.222.236/proj1part2"
 
 engine = create_engine(DATABASEURI)
 
+
 @app.before_request
 def before_request():
     try:
         g.conn = engine.connect()
-    except:
-        print("error when connect db")
-        import traceback; traceback.print_exc()
+    except Exception as e:
+        print(f"error when connectnig to db: {e}")
+        import traceback
+        traceback.print_exc()
         g.conn = None
 
+
 @app.teardown_request
-def teardown_request(exception):
+def teardown_request(_):
     try:
         g.conn.close()
-    except Exception as e:
+    except Exception:
         pass
+
 
 @app.route('/')
 def index():
     return render_template("index.html")
+
 
 @app.route('/userList')
 def users():
@@ -40,15 +47,20 @@ def users():
     cursor.close()
     return render_template("userList.html", users=users)
 
+
 @app.route('/delete_user/<username>')
 def delete_user(username):
     try:
-        g.conn.execute(text("DELETE FROM Users WHERE username = :username"), {"username": username})
+        g.conn.execute(
+            text("DELETE FROM Users WHERE username = :username"), {
+                "username": username}
+        )
         g.conn.commit()
         return redirect('/users')
     except Exception as e:
         return f"error: {e}"
-    
+
+
 @app.route('/test_db')
 def test_db():
     if not g.conn:
@@ -57,25 +69,30 @@ def test_db():
         cursor = g.conn.execute(text("SELECT * FROM users"))
         users = []
         for row in cursor:
-          users.append(row)
+            users.append(row)
         cursor.close()
         return f"db connect successfully result is: {users}"
     except Exception as e:
         return f"check failure: {e}", 500
+
 
 @app.route('/user/<username>')
 def user_detail(username):
     if not g.conn:
         return "can't connecct to db", 500
     try:
-        cursor = g.conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": username})
+        cursor = g.conn.execute(
+            text("SELECT * FROM users WHERE username = :username"),
+            {"username": username})
         user = cursor.fetchone()
         cursor.close()
         if not user:
             return "User Not Found", 404
-        
+
         # if user
-        cursor = g.conn.execute(text("SELECT * FROM Author WHERE username = :username"), {"username": username}).mappings()
+        cursor = g.conn.execute(
+            text("SELECT * FROM Author WHERE username = :username"),
+            {"username": username}).mappings()
         author = cursor.fetchone()
         cursor.close()
         if author:
@@ -91,7 +108,7 @@ def user_detail(username):
         else:
             authored_books = None
 
-        #book
+        # book
         cursor = g.conn.execute(text("""
             SELECT Book.isbn, Book.title
             FROM Reads
@@ -101,7 +118,8 @@ def user_detail(username):
         books = []
         book_isbns = []
         for row in cursor:
-            books.append({'isbn': row['isbn'], 'title': row['title'], 'chapters': []})
+            books.append(
+                {'isbn': row['isbn'], 'title': row['title'], 'chapters': []})
             book_isbns.append(row['isbn'])
         cursor.close()
 
@@ -126,7 +144,8 @@ def user_detail(username):
 
         # review
         cursor = g.conn.execute(text("""
-            SELECT Book.title, Reviews.isbn, Reviews.content, Reviews.comment_date, Reviews.rating
+            SELECT Book.title, Reviews.isbn, Reviews.content,
+                Reviews.comment_date, Reviews.rating
             FROM Reviews
             JOIN Book ON Reviews.isbn = Book.isbn
             WHERE Reviews.username = :username
@@ -134,22 +153,27 @@ def user_detail(username):
         reviews = cursor.fetchall()
         cursor.close()
 
-        return render_template("user_detail.html", user=user, books=books, reviews=reviews,authored_books=authored_books)
+        return render_template("user_detail.html",
+                               user=user, books=books, reviews=reviews,
+                               authored_books=authored_books)
     except Exception as e:
         return f"Error: get user detail: {e}", 500
-    
+
+
 @app.route('/categories')
 def categories():
     if not g.conn:
         return "can't connect db", 500
     try:
-        cursor = g.conn.execute(text("SELECT * FROM Category ORDER BY name ASC")).mappings()
+        cursor = g.conn.execute(
+            text("SELECT * FROM Category ORDER BY name ASC")).mappings()
         categories = [dict(row) for row in cursor]
         cursor.close()
         return render_template("categories.html", categories=categories)
     except Exception as e:
         return f"Error sreach at db: {e}", 500
-    
+
+
 @app.route('/category/<string:name>')
 def category_detail(name):
     if not g.conn:
@@ -161,14 +185,15 @@ def category_detail(name):
         ).mappings()
         category = cursor.fetchone()
         cursor.close()
-        
+
         if not category:
             return "Category does not exist.", 404
         category = dict(category)
-        
+
         cursor = g.conn.execute(
             text("""
-                SELECT Book.isbn, Book.title, Book.author, Book.publish_date, Book.status
+                SELECT Book.isbn, Book.title, Book.author,
+                    Book.publish_date, Book.status
                 FROM Book
                 JOIN BelongsIn ON Book.isbn = BelongsIn.isbn
                 WHERE BelongsIn.name = :name
@@ -178,16 +203,14 @@ def category_detail(name):
         ).mappings()
         books = [dict(row) for row in cursor]
         cursor.close()
-        
-        return render_template("category_detail.html", category=category, books=books)
+
+        return render_template("category_detail.html",
+                               category=category, books=books)
     except Exception as e:
         return f"Error searching the db: {e}", 500
 
 
-
 if __name__ == "__main__":
-    import click
-
     @click.command()
     @click.option('--debug', is_flag=True)
     @click.option('--threaded', is_flag=True)
