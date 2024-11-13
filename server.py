@@ -45,7 +45,7 @@ def delete_user(username):
     try:
         g.conn.execute(text("DELETE FROM Users WHERE username = :username"), {"username": username})
         g.conn.commit()
-        return redirect('/users')
+        return redirect('/index')
     except Exception as e:
         return f"error: {e}"
     
@@ -74,7 +74,7 @@ def user_detail(username):
         if not user:
             return "User Not Found", 404
         
-        # if user
+        # if author
         cursor = g.conn.execute(text("SELECT * FROM Author WHERE username = :username"), {"username": username}).mappings()
         author = cursor.fetchone()
         cursor.close()
