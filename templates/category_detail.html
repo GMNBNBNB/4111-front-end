@@ -1,35 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Category_detail - {{ category.name }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
     <h1>Category_detail: {{ category.name }}</h1>
     <nav>
-        <a href="/">Main Page</a> |
-        <a href="/users">User List</a> |
-        <a href="/categories">Categories_List</a>
+      <a href="/">Main Page</a> | <a href="/users">User List</a> |
+      <a href="/categories">Categories_List</a>
     </nav>
-    
+
     <h2>Description</h2>
     <p>{{ category.description }}</p>
-    
+
     <h2>Books</h2>
     {% if books %}
-        <ul>
-            {% for book in books %}
-                <li>
-                    <strong>{{ book.title }}</strong> (ISBN: {{ book.isbn }})<br>
-                    <strong>Author:</strong> {{ book.author }}<br>
-                    <strong>Publish_date:</strong> {{ book.publish_date }}<br>
-                    <strong>status:</strong> {{ book.status }}
-                </li>
-            {% endfor %}
-        </ul>
+    <ul>
+      {% for book in books %}
+      <li>
+        <strong><a href="/book/{{ book.isbn }}">{{ book.title }}</a></strong>
+        <br />
+        <strong>Author:</strong> {{ book.author }}<br />
+        <strong>Publish_date:</strong> {{ book.publish_date }}<br />
+        <strong>status:</strong> {{ book.status }}
+      </li>
+      {% endfor %}
+    </ul>
     {% else %}
-        <p>No book under this category</p>
+    <p>No book under this category</p>
     {% endif %}
-</body>
+  </body>
 </html>

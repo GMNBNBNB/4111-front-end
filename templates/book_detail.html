@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ book.title }}</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <h1>{{ book.bookname }}</h1>
+    <nav>
+      <a href="/">Main Page</a> |
+      <a href="/book_list">Book List</a>
+    </nav>
+    <h2>Book Profile</h2>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <p>
+      <strong>Author:</strong>
+      <a href="/user/{{ book.author }}">{{ book.author }}</a>
+    </p>
+    <p><strong>Publish Date:</strong> {{ book.publish_date }}</p>
+
+    <h2>Reviews</h2>
+    {% if reviews %}
+    <ul>
+      {% for review in reviews %}
+      <li>
+        <strong>Rating:</strong> {{ review.rating }} / 5<br />
+        <strong>Review Date:</strong> {{ review.comment_date }}<br />
+        <strong>Content:</strong> {{ review.content }}<br />
+        <strong>Reviewer:</strong>
+        <a href="/user/{{ review.username }}">{{ review.username }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No one has reviewed this book yet.</p>
+    {% endif %}
+
+    <h2>Download Links</h2>
+    {% if downloads %}
+    <ul>
+      <li>
+        {% for download in downloads %}
+        <a href="{{ download.url }}">{{ download.region }}</a>
+        {% endfor %}
+      </li>
+    </ul>
+    {% else %}
+    <p>No download links available.</p>
+    {% endif %}
+  </body>
+</html>
