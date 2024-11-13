@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Book List</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Book List</h1>
+    <nav>
+      <a href="/">Main Page</a> |
+      <a href="/categories">Categories</a>
+    </nav>
+    <table>
+      <thead>
+        <tr>
+          <th>ISBN</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Publish Date</th>
+          <th>Current Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td><a href="/book/{{ book.isbn }}">{{ book.isbn }}</a></td>
+          <td>{{ book.title }}</td>
+          <td><a href="/user/{{ book.author }}">{{ book.author }}</a></td>
+          <td>{{ book.publish_date }}</td>
+          <td>{{ book.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
