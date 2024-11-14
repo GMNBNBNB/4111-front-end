@@ -13,7 +13,8 @@
     <h1>{{ book.bookname }}</h1>
     <nav>
       <a href="/">Main Page</a> |
-      <a href="/book_list">Book List</a>
+      <a href="/book_list">Book List</a> |
+      <a href="/recommended/{{ book.isbn }}">Recommended List</a>
     </nav>
     <h2>Book Profile</h2>
     <p><strong>ISBN:</strong> {{ book.isbn }}</p>

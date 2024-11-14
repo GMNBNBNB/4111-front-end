@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Recommonded List</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+<body>
+    <h1>Based your reading</h1>
+    {% if recommended %}
+        <ul>
+            {% for book in recommended %}
+                <li>
+                    <a href="/book/{{ book.isbn }}"><strong>{{ book.title }}</strong></a>
+                    {% if book.read_count %}
+                        - read by {{ book.read_count }} user
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommended</p>
+    {% endif %}
+</body>
+</html>

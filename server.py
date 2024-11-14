@@ -313,6 +313,30 @@ def category_detail(name):
         )
     except Exception as e:
         return f"Error searching the db: {e}", 500
+    
+@app.route("/recommended/<isbn>")
+def recommended(isbn):
+    if not g.conn:
+        return "can't connect db", 500
+    try:
+        cursor = g.conn.execute(
+            text("""
+                SELECT b2.isbn, b2.title, COUNT(*) AS read_count
+                FROM Reads r1
+                JOIN Reads r2 ON r1.username = r2.username
+                JOIN Book b2 ON r2.isbn = b2.isbn
+                WHERE r1.isbn = :isbn
+                AND r2.isbn != :isbn
+                GROUP BY b2.isbn, b2.title
+                ORDER BY read_count DESC
+                LIMIT 10;
+                 """),{'isbn': isbn}
+        ).mappings()
+        recommended = [dict(row) for row in cursor]
+        cursor.close()
+        return render_template("recommended.html", recommended=recommended)
+    except Exception as e:
+        return f"Error sreach at db: {e}", 500
 
 
 if __name__ == "__main__":
