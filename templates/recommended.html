@@ -1,28 +1,30 @@
 <!doctype html>
 <html>
   <head>
-    <title>Recommonded List</title>
+    <title>Recommendations</title>
     <link
       rel="stylesheet"
       type="text/css"
       href="{{ url_for('static', filename='styles.css') }}"
     />
   </head>
-<body>
-    <h1>Based your reading</h1>
+  <body>
+    <h1>Readers of this book have also read...</h1>
     {% if recommended %}
-        <ul>
-            {% for book in recommended %}
-                <li>
-                    <a href="/book/{{ book.isbn }}"><strong>{{ book.title }}</strong></a>
-                    {% if book.read_count %}
-                        - read by {{ book.read_count }} user
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+    <ul>
+      {% for book in recommended %}
+      <li>
+        <a href="/book/{{ book.isbn }}"><strong>{{ book.title }}</strong></a>
+        {% if book.read_count %} - read by {{ book.read_count }} user {% endif
+        %}
+      </li>
+      {% endfor %}
+    </ul>
     {% else %}
-        <p>No recommended</p>
+    <p>
+      Oops, it looks like there are no recommendations to make based on this
+      book.
+    </p>
     {% endif %}
-</body>
+  </body>
 </html>

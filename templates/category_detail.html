@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Category_detail - {{ category.name }}</title>
+    <title>Category - {{ category.name }}</title>
     <link
       rel="stylesheet"
       type="text/css"
@@ -10,10 +10,10 @@
     />
   </head>
   <body>
-    <h1>Category_detail: {{ category.name }}</h1>
+    <h1>Category: {{ category.name }}</h1>
     <nav>
-      <a href="/">Main Page</a> | <a href="/users">User List</a> |
-      <a href="/categories">Categories_List</a>
+      <a href="/">Main Page</a> | <a href="/users">Users</a> |
+      <a href="/categories">Categories</a>
     </nav>
 
     <h2>Description</h2>
@@ -33,7 +33,7 @@
       {% endfor %}
     </ul>
     {% else %}
-    <p>No book under this category</p>
+    <p>There are no books in this category.</p>
     {% endif %}
   </body>
 </html>

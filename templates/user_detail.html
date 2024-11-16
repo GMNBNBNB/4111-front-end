@@ -13,7 +13,7 @@
     <h1>User Detail: {{ user.username }}</h1>
     <nav>
       <a href="/">Main Page</a> |
-      <a href="/user_list">User List</a>
+      <a href="/user_list">Users</a>
     </nav>
     <h2>User Profile</h2>
     <p><strong>User Name:</strong> {{ user.username }}</p>
@@ -21,8 +21,8 @@
     <p><strong>Join Date:</strong> {{ user.join_date }}</p>
 
     {% if authored_books %}
-    <h2>author information</h2>
-    <p>Author Book</p>
+    <h2>Author Profile</h2>
+    <p>Works</p>
     <ul>
       {% for book in authored_books %}
       <li>
@@ -35,7 +35,7 @@
     </ul>
     {% endif %}
 
-    <h2>Reading Book</h2>
+    <h2>Reading List</h2>
     {% if books %}
     <ul>
       {% for book in books %}
@@ -57,10 +57,10 @@
       {% endfor %}
     </ul>
     {% else %}
-    <p>User not reading any book</p>
+    <p>User has not read any books yet.</p>
     {% endif %}
 
-    <h2>Post Review</h2>
+    <h2>Reviews Posted</h2>
     {% if reviews %}
     <ul>
       {% for review in reviews %}
@@ -74,7 +74,7 @@
       {% endfor %}
     </ul>
     {% else %}
-    <p>User hasn't posted any reviews</p>
+    <p>User hasn't posted any reviews.</p>
     {% endif %}
   </body>
 </html>
