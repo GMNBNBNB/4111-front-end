@@ -9,7 +9,7 @@ tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 app = Flask(__name__, template_folder=tmpl_dir)
 
 # connect to DB
-DATABASEURI = "postgresql://mg4774:177624@104.196.222.236/proj1part2"
+DATABASEURI = "postgresql://username:password@104.196.222.236/proj1part2"
 
 engine = create_engine(DATABASEURI)
 
